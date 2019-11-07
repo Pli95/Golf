@@ -1,5 +1,6 @@
 let numPlayers = 0;
 let numHoles;
+let playerNames =[];
 
 (function () {
   getCourses();
@@ -77,7 +78,7 @@ function printCard() {
                             <div class="playersButtons">
                                 <span>Players</span>
                                 <button class="btn addRemove" data-toggle="modal" data-target="#addPlayerModal"><i class="fas fa-plus-circle"></i></button>
-                                <button class="btn addRemove"><i class="fas fa-minus-circle"></i></button>
+<!--                                <button class="btn addRemove"><i class="fas fa-minus-circle"></i></button>-->
                             </div> 
                          </div>
                          <div class="box"></div>`);
@@ -90,19 +91,42 @@ function buildCol() {
     </div>
     </div>`);
   for (let i = 1; i <= numHoles; i++) {
+    if (i === numHoles / 2 + 1) {
+      $(".box").append(`<div id="out" class="column">OUT</div>`)
+    }
     $(".box").append(`<div id="hole${i}" class="column">${i}</div>`)
   }
+  $(".box").append(`<div id="in" class="column">IN</div>
+                    <div id="total" class="column">TOT</div>`)
 }
 
 function buildRow() {
-    for (let j = 1; j <= numHoles; j++) {
-      $("#hole" + j).append(`<input type = number id="player${numPlayers}${j}" class="players"></input>`)
-    }
+  for (let j = 1; j <= numHoles; j++) {
+    $("#hole" + j).append(`<input type = number pattern="\\d*" id="player${numPlayers}${j}" class="players"></input>`)
+  }
+  $("#out").append(`<div class="players"></div>`)
+  $("#in").append(`<div class="players"></div>`)
+  $("#total").append(`<div class="players"></div>`)
 }
 
 function addPlayers(playerName) {
+  for(let p = 0; p < playerNames.length; p++) {
+    if(playerName.trim() === playerNames[p]) {
+      $("#validation").html("Oops! Looks like you entered two of the same names")
+      $("#validation").css("color", "red");
+      return false
+    }
+  }
+  playerNames.push(playerName.trim());
   numPlayers++;
-  $(".name").append(` <div class="players">${playerName}</div>`);
+  $(".name").append(` <div class="players">${playerName.trim()}</div>`);
   buildRow();
   $("#playerName").val(" ")
+  $("#validation").html("Player added");
+  $("#validation").css("color", "green");
+}
+
+function removePlayers() {
+  numPlayers--;
+
 }
