@@ -1,0 +1,55 @@
+$globalMargin: 20px;
+$green: #687864;
+$darkBlue: #31708E;
+$medBlue: #5085A5;
+$lightBlue: #8FC1E3;
+$white: #F7F9FB;
+$largeScreen: 1100px;
+
+body {
+  background-color: $green;
+
+  .courses {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    .card {
+      margin: $globalMargin;
+      background-color: $white;
+
+      .card-body {
+
+        .btn-primary {
+          background-color: $darkBlue;
+          border: $darkBlue;
+        }
+
+        .teeType {
+          display: flex;
+          flex-direction: column;
+          width: 50%;
+          button {
+            background-color: $medBlue;
+            margin: $globalMargin;
+          }
+        }
+      }
+      }
+    }
+  }
+
+@media screen and (min-width: $largeScreen) {
+  body{
+    .courses {
+      flex-direction: row;
+      align-items: center;
+      min-height: 800px;
+
+      img {
+        height: 300px;
+      }
+    }
+  }
+}
+

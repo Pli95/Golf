@@ -1,0 +1,27 @@
+body {
+  background-color: #687864; }
+  body .courses {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; }
+    body .courses .card {
+      margin: 20px;
+      background-color: #F7F9FB; }
+      body .courses .card .card-body .btn-primary {
+        background-color: #31708E;
+        border: #31708E; }
+      body .courses .card .card-body .teeType {
+        display: flex;
+        flex-direction: column;
+        width: 50%; }
+        body .courses .card .card-body .teeType button {
+          background-color: #5085A5;
+          margin: 20px; }
+
+@media screen and (min-width: 1100px) {
+  body .courses {
+    flex-direction: row;
+    align-items: center;
+    min-height: 800px; }
+    body .courses img {
+      height: 300px; } }

@@ -1,0 +1,24 @@
+{
+  "name": "Golf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "scripts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "scss": "node-sass --watch scss -o css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pli95/Golf.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Pli95/Golf/issues"
+  },
+  "homepage": "https://github.com/Pli95/Golf#readme",
+  "devDependencies": {
+    "node-sass": "^4.13.0"
+  }
+}
