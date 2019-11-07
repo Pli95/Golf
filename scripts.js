@@ -1,3 +1,6 @@
+let numPlayers = 0;
+let numHoles;
+
 (function () {
   getCourses();
 })();
@@ -15,6 +18,7 @@ function getCourses() {
 }
 
 function printCourses(courses) {
+  $(".golfCard").html(" ")
   courses.forEach(course => {
     $(".courses").append(`<div class="courseBox card", id="${course.id}">
                            <img class="card-img-top" src="${course.image}">
@@ -40,20 +44,17 @@ function getCourse(id, el) {
 }
 
 function printTeeType(myCourse, el) {
+
   myCourse.data.holes[0].teeBoxes.forEach(tee => {
+    numHoles = myCourse.data.holes.length;
     $(el).html("Close");
-    $(el).attr("onclick",`collapseBox(this, ${myCourse.data.id})`);
-    if(tee.teeHexColor === "#443C30") {
-      $(el).parent().find(".teeType").append(`<button class="btn btn-primary" style="background-color: ${tee.teeHexColor}">${tee.teeType}</button>`)
-      console.log(tee.teeHexColor)
-    }
-    else if (tee.teeHexColor === "#ffffff"){
-      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}; border: solid 1px;">${tee.teeType}</button>`)
-      console.log(tee.teeHexColor)
-    }
-    else {
-      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}">${tee.teeType}</button>`)
-      console.log(tee.teeHexColor)
+    $(el).attr("onclick", `collapseBox(this, ${myCourse.data.id})`);
+    if (tee.teeHexColor === "#443C30") {
+      $(el).parent().find(".teeType").append(`<button class="btn btn-primary" style="background-color: ${tee.teeHexColor}" onclick="getCard()">${tee.teeType}</button>`)
+    } else if (tee.teeHexColor === "#ffffff") {
+      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}; border: solid 1px;" onclick="getCard()">${tee.teeType}</button>`)
+    } else {
+      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}" onclick="getCard()">${tee.teeType}</button>`)
     }
   })
 }
@@ -62,4 +63,46 @@ function collapseBox(el, id) {
   $(el).html("Select");
   $(el).attr("onclick", `getCourse(${id}, this)`);
   $(el).parent().find(".teeType").html("");
+}
+
+function getCard() {
+  printCard(numHoles);
+}
+
+function printCard() {
+  $(".courses").html(" ");
+  $(".courses").attr("style", "min-height: 0");
+  $(".golfCard").append(`<div class="buttons">
+                            <button class="btn btn-primary" onclick="getCourses()">Back</button>
+                            <div class="playersButtons">
+                                <span>Players</span>
+                                <button class="btn addRemove" data-toggle="modal" data-target="#addPlayerModal"><i class="fas fa-plus-circle"></i></button>
+                                <button class="btn addRemove"><i class="fas fa-minus-circle"></i></button>
+                            </div> 
+                         </div>
+                         <div class="box"></div>`);
+  buildCol()
+}
+
+function buildCol() {
+  $(".box").append(`<div class="label column">
+    <div class="name">HOLE
+    </div>
+    </div>`);
+  for (let i = 1; i <= numHoles; i++) {
+    $(".box").append(`<div id="hole${i}" class="column">${i}</div>`)
+  }
+}
+
+function buildRow() {
+    for (let j = 1; j <= numHoles; j++) {
+      $("#hole" + j).append(`<input type = number id="player${numPlayers}${j}" class="players"></input>`)
+    }
+}
+
+function addPlayers(playerName) {
+  numPlayers++;
+  $(".name").append(` <div class="players">${playerName}</div>`);
+  buildRow();
+  $("#playerName").val(" ")
 }

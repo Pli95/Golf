@@ -20,27 +20,80 @@ body {
 
       .card-body {
 
-        .btn-primary {
-          background-color: $darkBlue;
-          border: $darkBlue;
-        }
-
         .teeType {
           display: flex;
           flex-direction: column;
           width: 50%;
+
           button {
             background-color: $medBlue;
             margin: $globalMargin;
           }
+
+          button:hover {
+            opacity: .5;
+          }
         }
-      }
       }
     }
   }
 
+  .golfCard {
+    margin: $globalMargin;
+    .buttons {
+      color: $white;
+      .playersButtons {
+        .addRemove {
+          font-size: 35px;
+          background: none;
+          border: none;
+          color: $lightBlue;
+        }
+        .addRemove:hover {
+          color: $medBlue;
+        }
+      }
+
+    }
+    .box{
+      display: flex;
+      border: 2px solid black;
+      margin: 5px;
+
+      .column {
+        border-right: 2px solid;
+        width: 40px;
+        text-align: center;
+
+        input {
+          width: 38px;
+        }
+      }
+
+      .label {
+        width: 10%;
+      }
+    }
+  }
+}
+
+.btn-primary {
+  background-color: $darkBlue;
+  border: $darkBlue;
+}
+
+.btn-primary:hover {
+  background-color: $medBlue;
+  border: $medBlue;
+}
+
+.players {
+  border-top: 2px solid;
+  height: 38px;
+}
+
 @media screen and (min-width: $largeScreen) {
-  body{
+  body {
     .courses {
       flex-direction: row;
       align-items: center;
