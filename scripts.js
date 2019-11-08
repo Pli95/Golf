@@ -1,6 +1,26 @@
+class PlayerCollection {
+  constructor() {
+    this.playerNames = []
+  }
+
+  add(name) {
+    this.playerNames.push(new Player(name))
+  }
+}
+
+class Player {
+  constructor(name) {
+    this.name = name;
+    this.outNum = 0;
+    this.inNum = 0;
+    this.totalNum = 0;
+  }
+
+}
+
 let numPlayers = 0;
 let numHoles;
-let playerNames =[];
+let players = new PlayerCollection();
 
 (function () {
   getCourses();
@@ -19,9 +39,9 @@ function getCourses() {
 }
 
 function printCourses(courses) {
-  $(".golfCard").html(" ")
+  $(".golfCard").html(" ");
   courses.forEach(course => {
-    $(".courses").append(`<div class="courseBox card", id="${course.id}">
+    $(".courses").append(`<div class="courseBox card" id="${course.id}">
                            <img class="card-img-top" src="${course.image}">
                            <div class="card-body">
                             <h5 class="card-title">${course.name}</h5>
@@ -47,15 +67,16 @@ function getCourse(id, el) {
 function printTeeType(myCourse, el) {
 
   myCourse.data.holes[0].teeBoxes.forEach(tee => {
+    console.log(myCourse.data);
     numHoles = myCourse.data.holes.length;
     $(el).html("Close");
     $(el).attr("onclick", `collapseBox(this, ${myCourse.data.id})`);
     if (tee.teeHexColor === "#443C30") {
       $(el).parent().find(".teeType").append(`<button class="btn btn-primary" style="background-color: ${tee.teeHexColor}" onclick="getCard()">${tee.teeType}</button>`)
     } else if (tee.teeHexColor === "#ffffff") {
-      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}; border: solid 1px;" onclick="getCard()">${tee.teeType}</button>`)
+      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}; border: solid 1px;" onclick="printCard()">${tee.teeType}</button>`)
     } else {
-      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}" onclick="getCard()">${tee.teeType}</button>`)
+      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}" onclick="printCard()">${tee.teeType}</button>`)
     }
   })
 }
@@ -66,8 +87,9 @@ function collapseBox(el, id) {
   $(el).parent().find(".teeType").html("");
 }
 
-function getCard() {
-  printCard(numHoles);
+function getCard(tee) {
+  let teeObject = JSON.parse(tee);
+  console.log(teeObject)
 }
 
 function printCard() {
@@ -82,14 +104,13 @@ function printCard() {
                             </div> 
                          </div>
                          <div class="box"></div>`);
+  $(".box").append(`<div class="label column">
+                        <div class="name">HOLE</div>
+                    </div>`);
   buildCol()
 }
 
 function buildCol() {
-  $(".box").append(`<div class="label column">
-    <div class="name">HOLE
-    </div>
-    </div>`);
   for (let i = 1; i <= numHoles; i++) {
     if (i === numHoles / 2 + 1) {
       $(".box").append(`<div id="out" class="column">OUT</div>`)
@@ -102,22 +123,22 @@ function buildCol() {
 
 function buildRow() {
   for (let j = 1; j <= numHoles; j++) {
-    $("#hole" + j).append(`<input type = number pattern="\\d*" id="player${numPlayers}${j}" class="players"></input>`)
+    $("#hole" + j).append(`<input type = number pattern="\\d*" id="player${numPlayers}${j}" class="players" onblur="doMath(this)"></input>`)
   }
-  $("#out").append(`<div class="players"></div>`)
-  $("#in").append(`<div class="players"></div>`)
-  $("#total").append(`<div class="players"></div>`)
+  $("#out").append(`<div class="players" id="out${numPlayers}">${players.playerNames[0].outNum}</div>`)
+  $("#in").append(`<div class="players" id="in${numPlayers}">0</div>`)
+  $("#total").append(`<div class="players" id="total${numPlayers}">0</div>`)
 }
 
 function addPlayers(playerName) {
-  for(let p = 0; p < playerNames.length; p++) {
-    if(playerName.trim() === playerNames[p]) {
+  for (let p = 0; p < players.playerNames.length; p++) {
+    if (playerName.trim() === players.playerNames[p].name) {
       $("#validation").html("Oops! Looks like you entered two of the same names")
       $("#validation").css("color", "red");
       return false
     }
   }
-  playerNames.push(playerName.trim());
+  players.add(playerName.trim());
   numPlayers++;
   $(".name").append(` <div class="players">${playerName.trim()}</div>`);
   buildRow();
@@ -128,5 +149,31 @@ function addPlayers(playerName) {
 
 function removePlayers() {
   numPlayers--;
+
+}
+
+function doMath(el) {
+  let num = parseInt(el.value);
+  if (!num) {
+    num = 0;
+  }
+
+
+  for (let i = 1; i <= numPlayers; i++) {
+    let player = players.playerNames[i-1]
+    if (el.id.indexOf(i) === 6) {
+      if (!el.id.charAt(8)) {
+        player.outNum += num;
+        $(`#out${i}`).html(player.outNum);
+        // }
+      }
+      else {
+        player.inNum += num;
+        $(`#in${i}`).html(player.inNum);
+      }
+      player.totalNum = player.outNum + player.inNum;
+      $(`#total${i}`).html(player.totalNum);
+    }
+  }
 
 }
