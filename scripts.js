@@ -128,7 +128,7 @@ function buildRow() {
   for (let j = 1; j <= numHoles; j++) {
     $("#hole" + j).append(`<input type = number pattern="\\d*" id="player${numPlayers}${j}" class="players" onblur="doMath(this)"></input>`)
   }
-  $("#out").append(`<div class="players" id="out${numPlayers}">${players.playerNames[0].outNum}</div>`)
+  $("#out").append(`<div class="players" id="out${numPlayers}">0</div>`)
   $("#in").append(`<div class="players" id="in${numPlayers}">0</div>`)
   $("#total").append(`<div class="players" id="total${numPlayers}">0</div>`)
 }
