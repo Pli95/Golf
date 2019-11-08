@@ -6,6 +6,9 @@ class PlayerCollection {
   add(name) {
     this.playerNames.push(new Player(name))
   }
+  remove() {
+    this.playerNames.pop()
+  }
 }
 
 class Player {
@@ -100,7 +103,7 @@ function printCard() {
                             <div class="playersButtons">
                                 <span>Players</span>
                                 <button class="btn addRemove" data-toggle="modal" data-target="#addPlayerModal"><i class="fas fa-plus-circle"></i></button>
-<!--                                <button class="btn addRemove"><i class="fas fa-minus-circle"></i></button>-->
+                                <button class="btn addRemove" onclick="removePlayers()"><i class="fas fa-minus-circle"></i></button>
                             </div> 
                          </div>
                          <div class="box"></div>`);
@@ -130,6 +133,15 @@ function buildRow() {
   $("#total").append(`<div class="players" id="total${numPlayers}">0</div>`)
 }
 
+function removeRow() {
+  for (let j = 1; j <= numHoles; j++) {
+    $("#hole" + j).children("input:last").remove()
+  }
+  $("#out").children("div:last").remove();
+  $("#in").children("div:last").remove();
+  $("#total").children("div:last").remove()
+}
+
 function addPlayers(playerName) {
   for (let p = 0; p < players.playerNames.length; p++) {
     if (playerName.trim() === players.playerNames[p].name) {
@@ -149,7 +161,9 @@ function addPlayers(playerName) {
 
 function removePlayers() {
   numPlayers--;
-
+  players.remove();
+  $(".name").children("div:last").remove();
+  removeRow();
 }
 
 function doMath(el) {
