@@ -24,6 +24,7 @@ class Player {
 let numPlayers = 0;
 let numHoles;
 let players = new PlayerCollection();
+let teeType;
 
 (function () {
   getCourses();
@@ -43,6 +44,7 @@ function getCourses() {
 
 function printCourses(courses) {
   $(".golfCard").html(" ");
+  $(".golfCard").css("background-color", "")
   courses.forEach(course => {
     $(".courses").append(`<div class="courseBox card" id="${course.id}">
                            <img class="card-img-top" src="${course.image}">
@@ -60,26 +62,27 @@ function getCourse(id, el) {
   xmlCall.onreadystatechange = function () {
     if (this.readyState === 4 && this.status === 200) {
       let myCourse = JSON.parse(this.responseText);
-      printTeeType(myCourse, el)
+      printTeeType(myCourse, el);
     }
   };
   xmlCall.open('GET', `https://golf-courses-api.herokuapp.com/courses/${id}`, true)
   xmlCall.send()
 }
 
-function printTeeType(myCourse, el) {
 
+function printTeeType(myCourse, el) {
   myCourse.data.holes[0].teeBoxes.forEach(tee => {
-    console.log(myCourse.data);
+    teeType = tee;
+    let capName = tee.teeType.charAt(0).toUpperCase() + tee.teeType.slice(1)
     numHoles = myCourse.data.holes.length;
     $(el).html("Close");
     $(el).attr("onclick", `collapseBox(this, ${myCourse.data.id})`);
     if (tee.teeHexColor === "#443C30") {
-      $(el).parent().find(".teeType").append(`<button class="btn btn-primary" style="background-color: ${tee.teeHexColor}" onclick="getCard()">${tee.teeType}</button>`)
+      $(el).parent().find(".teeType").append(`<button class="btn btn-primary" style="background-color: ${teeType.teeHexColor}" onclick="printCard('${capName}', '${tee.teeHexColor}')">${capName}</button>`)
     } else if (tee.teeHexColor === "#ffffff") {
-      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}; border: solid 1px;" onclick="printCard()">${tee.teeType}</button>`)
+      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}; border: solid 1px;" onclick="printCard('${capName}', '${tee.teeHexColor}')">${capName}</button>`)
     } else {
-      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}" onclick="printCard()">${tee.teeType}</button>`)
+      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}" onclick="printCard('${capName}', '${tee.teeHexColor}')">${capName}</button>`)
     }
   })
 }
@@ -90,15 +93,20 @@ function collapseBox(el, id) {
   $(el).parent().find(".teeType").html("");
 }
 
-function getCard(tee) {
-  let teeObject = JSON.parse(tee);
-  console.log(teeObject)
-}
 
-function printCard() {
+function printCard(name, color) {
+  console.log(teeType)
   $(".courses").html(" ");
   $(".courses").attr("style", "min-height: 0");
-  $(".golfCard").append(`<div class="buttons">
+  $(".golfCard").css("background-color", color);
+  if(color === "#ffffff" || color === "#fffc00") {
+    $(".golfCard").css("color", "black")
+  }
+  else {
+    $(".golfCard").css("color", "")
+  }
+  $(".golfCard").append(`<h3>${name}</h3>
+                         <div class="buttons">
                             <button class="btn btn-primary" onclick="getCourses()">Back</button>
                             <div class="playersButtons">
                                 <span>Players</span>
@@ -108,7 +116,10 @@ function printCard() {
                          </div>
                          <div class="box"></div>`);
   $(".box").append(`<div class="label column">
-                        <div class="name">HOLE</div>
+                        <div class="name">HOLE
+                            <div class="players">Yards</div>
+                            <div class="players">Handicap</div>
+                        </div>
                     </div>`);
   buildCol()
 }
@@ -116,12 +127,23 @@ function printCard() {
 function buildCol() {
   for (let i = 1; i <= numHoles; i++) {
     if (i === numHoles / 2 + 1) {
-      $(".box").append(`<div id="out" class="column">OUT</div>`)
+      $(".box").append(`<div id="out" class="column">OUT
+                            <div class="players">650</div>
+                            <div class="players">650</div>
+                        </div>`)
     }
     $(".box").append(`<div id="hole${i}" class="column">${i}</div>`)
+    $(`#hole${i}`).append(`<div class ="players">320</div>`)
+    $(`#hole${i}`).append(`<div class ="players">320</div>`)
   }
-  $(".box").append(`<div id="in" class="column">IN</div>
-                    <div id="total" class="column">TOT</div>`)
+  $(".box").append(`<div id="in" class="column">IN
+                        <div class="players">750</div>
+                        <div class="players">650</div>
+                    </div>
+                    <div id="total" class="column">TOT
+                        <div class="players">5000</div>
+                        <div class="players">650</div>
+                    </div>`)
 }
 
 function buildRow() {

@@ -40,8 +40,10 @@ body {
 
   .golfCard {
     margin: $globalMargin;
+    padding: $globalMargin;
+    border-radius: 10px;
+    color: white;
     .buttons {
-      color: $white;
       .playersButtons {
         .addRemove {
           font-size: 35px;
@@ -57,7 +59,7 @@ body {
     }
     .box{
       display: flex;
-      border: 2px solid black;
+      border: 2px solid;
       margin: 5px;
 
       .column {
