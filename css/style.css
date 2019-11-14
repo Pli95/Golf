@@ -21,25 +21,27 @@ body {
     padding: 20px;
     border-radius: 10px;
     color: white; }
-    body .golfCard .buttons .playersButtons .addRemove {
-      font-size: 35px;
-      background: none;
-      border: none;
-      color: #8FC1E3; }
-    body .golfCard .buttons .playersButtons .addRemove:hover {
-      color: #5085A5; }
+    body .golfCard .buttons {
+      margin: 20px; }
+      body .golfCard .buttons .playersButtons .addRemove {
+        font-size: 35px;
+        background: none;
+        border: none;
+        color: #8FC1E3; }
+      body .golfCard .buttons .playersButtons .addRemove:hover {
+        color: #5085A5; }
     body .golfCard .box {
-      display: flex;
+      display: inline-flex;
       border: 2px solid;
       margin: 5px; }
       body .golfCard .box .column {
         border-right: 2px solid;
-        width: 40px;
+        min-width: 50px;
         text-align: center; }
         body .golfCard .box .column input {
-          width: 38px; }
+          width: 100%; }
       body .golfCard .box .label {
-        width: 10%; }
+        min-width: 80px; }
 
 .btn-primary {
   background-color: #31708E;

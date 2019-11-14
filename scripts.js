@@ -25,6 +25,7 @@ let numPlayers = 0;
 let numHoles;
 let players = new PlayerCollection();
 let teeArray = [];
+let parTotal = 0;
 
 (function () {
   getCourses();
@@ -76,7 +77,6 @@ function printTeeType(myCourse, el) {
     teeArray.push(hole)
   })
   myCourse.data.holes[0].teeBoxes.forEach(function (tee, index) {
-    // teeArray.push(tee);
     let capName = tee.teeType.charAt(0).toUpperCase() + tee.teeType.slice(1)
     numHoles = myCourse.data.holes.length;
     $(el).html("Close");
@@ -101,7 +101,6 @@ function collapseBox(el, id) {
 function printCard(i) {
   let color = teeArray[0].teeBoxes[i].teeHexColor;
   let name = teeArray[0].teeBoxes[i].teeType.charAt(0).toUpperCase() + teeArray[0].teeBoxes[i].teeType.slice(1);
-  console.log(teeArray)
 
   $(".courses").html(" ");
   $(".courses").attr("style", "min-height: 0");
@@ -121,7 +120,10 @@ function printCard(i) {
                                 <button class="btn addRemove" onclick="removePlayers()"><i class="fas fa-minus-circle"></i></button>
                             </div> 
                          </div>
-                         <div class="box"></div>`);
+                         <div class="box"></div>
+                         <div class="buttons" id="bottomSection">
+                            <button class="btn btn-primary" onclick="message()">Finished Game</button>
+                         </div>`);
   $(".box").append(`<div class="label column">
                         <div class="name">HOLE
                             <div class="players">Yards</div>
@@ -138,6 +140,7 @@ function buildCol(index) {
   let yardTotal = 0;
 
   for (let i = 1; i <= numHoles; i++) {
+    parTotal += teeArray[i - 1].teeBoxes[index].par;
     yardTotal += teeArray[i - 1].teeBoxes[index].yards;
     hcpTotal += teeArray[i - 1].teeBoxes[index].hcp;
     if(i === numHoles/2) {
@@ -183,6 +186,14 @@ function removeRow() {
   $("#in").children("div:last").remove();
   $("#total").children("div:last").remove()
 }
+
+document.getElementById("playerName")
+  .addEventListener("keyup", function (event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+      document.getElementById("addPlayer").click();
+    }
+  });
 
 function addPlayers(playerName) {
   for (let p = 0; p < players.playerNames.length; p++) {
@@ -231,5 +242,22 @@ function doMath(el) {
       $(`#total${i}`).html(player.totalNum);
     }
   }
+
+}
+
+function message() {
+
+  players.playerNames.forEach(player => {
+    let score = player.totalNum - parTotal
+    if(score <= 0) {
+      $("#bottomSection").append(`<p>${player.name}'s score: ${score}. On to the PGA!</p>`)
+    }
+    else {
+      $("#bottomSection").append(`<p>${player.name}'s score: ${score}. Better luck next time</p>`)
+    }
+
+    console.log(player)
+
+  })
 
 }

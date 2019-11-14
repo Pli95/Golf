@@ -44,6 +44,7 @@ body {
     border-radius: 10px;
     color: white;
     .buttons {
+      margin: $globalMargin;
       .playersButtons {
         .addRemove {
           font-size: 35px;
@@ -58,22 +59,22 @@ body {
 
     }
     .box{
-      display: flex;
+      display: inline-flex;
       border: 2px solid;
       margin: 5px;
 
       .column {
         border-right: 2px solid;
-        width: 40px;
+        min-width: 50px;
         text-align: center;
 
         input {
-          width: 38px;
+          width: 100%;
         }
       }
 
       .label {
-        width: 10%;
+        min-width: 80px;
       }
     }
   }
