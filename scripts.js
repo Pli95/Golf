@@ -133,34 +133,36 @@ function printCard(i) {
 
 function buildCol(index) {
   let hcpOut = 0;
-  let hcpIn = 0;
   let hcpTotal = 0;
   let yardOut = 0;
   let yardTotal = 0;
 
   for (let i = 1; i <= numHoles; i++) {
     yardTotal += teeArray[i - 1].teeBoxes[index].yards;
+    hcpTotal += teeArray[i - 1].teeBoxes[index].hcp;
     if(i === numHoles/2) {
+      hcpOut = hcpTotal
       yardOut = yardTotal
     }
     if (i === numHoles / 2 + 1) {
       $(".box").append(`<div id="out" class="column">OUT
                             <div class="players" id="yardOut">${yardOut}</div>
-                            <div class="players">650</div>
+                            <div class="players">${hcpOut}</div>
                         </div>`)
     }
     $(".box").append(`<div id="hole${i}" class="column">${i}</div>`)
     $(`#hole${i}`).append(`<div class ="players">${teeArray[i - 1].teeBoxes[index].yards}</div>`)
     $(`#hole${i}`).append(`<div class ="players">${teeArray[i - 1].teeBoxes[index].hcp}</div>`)
   }
-  let yardIn = yardTotal - yardOut
+  let yardIn = yardTotal - yardOut;
+  let hcpIn = hcpTotal - hcpOut;
   $(".box").append(`<div id="in" class="column">IN
                         <div class="players">${yardIn}</div>
-                        <div class="players">650</div>
+                        <div class="players">${hcpIn}</div>
                     </div>
                     <div id="total" class="column">TOT
                         <div class="players">${yardTotal}</div>
-                        <div class="players">650</div>
+                        <div class="players">${hcpTotal}</div>
                     </div>`)
 }
 
