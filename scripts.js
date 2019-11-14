@@ -24,7 +24,7 @@ class Player {
 let numPlayers = 0;
 let numHoles;
 let players = new PlayerCollection();
-let teeType;
+let teeArray = [];
 
 (function () {
   getCourses();
@@ -71,18 +71,22 @@ function getCourse(id, el) {
 
 
 function printTeeType(myCourse, el) {
-  myCourse.data.holes[0].teeBoxes.forEach(tee => {
-    teeType = tee;
+  teeArray = []
+  myCourse.data.holes.forEach(hole => {
+    teeArray.push(hole)
+  })
+  myCourse.data.holes[0].teeBoxes.forEach(function (tee, index) {
+    // teeArray.push(tee);
     let capName = tee.teeType.charAt(0).toUpperCase() + tee.teeType.slice(1)
     numHoles = myCourse.data.holes.length;
     $(el).html("Close");
     $(el).attr("onclick", `collapseBox(this, ${myCourse.data.id})`);
     if (tee.teeHexColor === "#443C30") {
-      $(el).parent().find(".teeType").append(`<button class="btn btn-primary" style="background-color: ${teeType.teeHexColor}" onclick="printCard('${capName}', '${tee.teeHexColor}')">${capName}</button>`)
+      $(el).parent().find(".teeType").append(`<button class="btn btn-primary" style="background-color: ${tee.teeHexColor}" onclick="printCard('${index}')">${capName}</button>`)
     } else if (tee.teeHexColor === "#ffffff") {
-      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}; border: solid 1px;" onclick="printCard('${capName}', '${tee.teeHexColor}')">${capName}</button>`)
+      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}; border: solid 1px;" onclick="printCard('${index}')">${capName}</button>`)
     } else {
-      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}" onclick="printCard('${capName}', '${tee.teeHexColor}')">${capName}</button>`)
+      $(el).parent().find(".teeType").append(`<button class="btn" style="background-color: ${tee.teeHexColor}" onclick="printCard('${index}')">${capName}</button>`)
     }
   })
 }
@@ -94,8 +98,11 @@ function collapseBox(el, id) {
 }
 
 
-function printCard(name, color) {
-  console.log(teeType)
+function printCard(i) {
+  let color = teeArray[0].teeBoxes[i].teeHexColor;
+  let name = teeArray[0].teeBoxes[i].teeType.charAt(0).toUpperCase() + teeArray[0].teeBoxes[i].teeType.slice(1);
+  console.log(teeArray)
+
   $(".courses").html(" ");
   $(".courses").attr("style", "min-height: 0");
   $(".golfCard").css("background-color", color);
@@ -121,27 +128,38 @@ function printCard(name, color) {
                             <div class="players">Handicap</div>
                         </div>
                     </div>`);
-  buildCol()
+  buildCol(i)
 }
 
-function buildCol() {
+function buildCol(index) {
+  let hcpOut = 0;
+  let hcpIn = 0;
+  let hcpTotal = 0;
+  let yardOut = 0;
+  let yardTotal = 0;
+
   for (let i = 1; i <= numHoles; i++) {
+    yardTotal += teeArray[i - 1].teeBoxes[index].yards;
+    if(i === numHoles/2) {
+      yardOut = yardTotal
+    }
     if (i === numHoles / 2 + 1) {
       $(".box").append(`<div id="out" class="column">OUT
-                            <div class="players">650</div>
+                            <div class="players" id="yardOut">${yardOut}</div>
                             <div class="players">650</div>
                         </div>`)
     }
     $(".box").append(`<div id="hole${i}" class="column">${i}</div>`)
-    $(`#hole${i}`).append(`<div class ="players">320</div>`)
-    $(`#hole${i}`).append(`<div class ="players">320</div>`)
+    $(`#hole${i}`).append(`<div class ="players">${teeArray[i - 1].teeBoxes[index].yards}</div>`)
+    $(`#hole${i}`).append(`<div class ="players">${teeArray[i - 1].teeBoxes[index].hcp}</div>`)
   }
+  let yardIn = yardTotal - yardOut
   $(".box").append(`<div id="in" class="column">IN
-                        <div class="players">750</div>
+                        <div class="players">${yardIn}</div>
                         <div class="players">650</div>
                     </div>
                     <div id="total" class="column">TOT
-                        <div class="players">5000</div>
+                        <div class="players">${yardTotal}</div>
                         <div class="players">650</div>
                     </div>`)
 }
