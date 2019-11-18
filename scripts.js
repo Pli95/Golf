@@ -6,6 +6,7 @@ class PlayerCollection {
   add(name) {
     this.playerNames.push(new Player(name))
   }
+
   remove() {
     this.playerNames.pop()
   }
@@ -32,6 +33,7 @@ let parTotal = 0;
 })();
 
 function getCourses() {
+  parTotal = 0;
   let xml = new XMLHttpRequest();
   xml.onreadystatechange = function () {
     if (this.readyState === 4 && this.status === 200) {
@@ -105,10 +107,9 @@ function printCard(i) {
   $(".courses").html(" ");
   $(".courses").attr("style", "min-height: 0");
   $(".golfCard").css("background-color", color);
-  if(color === "#ffffff" || color === "#fffc00") {
+  if (color === "#ffffff" || color === "#fffc00") {
     $(".golfCard").css("color", "black")
-  }
-  else {
+  } else {
     $(".golfCard").css("color", "")
   }
   $(".golfCard").append(`<h3>${name}</h3>
@@ -122,50 +123,53 @@ function printCard(i) {
                          </div>
                          <div class="box"></div>
                          <div class="buttons" id="bottomSection">
-                            <button class="btn btn-primary" onclick="message()">Finished Game</button>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#finishModal" onclick="message()">Finished Game</button>
                          </div>`);
   $(".box").append(`<div class="label column">
                         <div class="name">HOLE
                             <div class="players">Yards</div>
                             <div class="players">Handicap</div>
+                            <div class="players">Par</div>
                         </div>
                     </div>`);
   buildCol(i)
 }
 
 function buildCol(index) {
-  let hcpOut = 0;
-  let hcpTotal = 0;
+  let parOut = 0;
   let yardOut = 0;
   let yardTotal = 0;
 
   for (let i = 1; i <= numHoles; i++) {
     parTotal += teeArray[i - 1].teeBoxes[index].par;
     yardTotal += teeArray[i - 1].teeBoxes[index].yards;
-    hcpTotal += teeArray[i - 1].teeBoxes[index].hcp;
-    if(i === numHoles/2) {
-      hcpOut = hcpTotal
+    if (i === numHoles / 2) {
+      parOut = parTotal
       yardOut = yardTotal
     }
     if (i === numHoles / 2 + 1) {
       $(".box").append(`<div id="out" class="column">OUT
                             <div class="players" id="yardOut">${yardOut}</div>
-                            <div class="players">${hcpOut}</div>
+                            <div class="players"></div>
+                            <div class="players">${parOut}</div>
                         </div>`)
     }
     $(".box").append(`<div id="hole${i}" class="column">${i}</div>`)
     $(`#hole${i}`).append(`<div class ="players">${teeArray[i - 1].teeBoxes[index].yards}</div>`)
     $(`#hole${i}`).append(`<div class ="players">${teeArray[i - 1].teeBoxes[index].hcp}</div>`)
+    $(`#hole${i}`).append(`<div class ="players">${teeArray[i - 1].teeBoxes[index].par}</div>`)
   }
   let yardIn = yardTotal - yardOut;
-  let hcpIn = hcpTotal - hcpOut;
+  let parIn = parTotal - parOut;
   $(".box").append(`<div id="in" class="column">IN
                         <div class="players">${yardIn}</div>
-                        <div class="players">${hcpIn}</div>
+                        <div class="players"></div>
+                        <div class="players">${parIn}</div>
                     </div>
                     <div id="total" class="column">TOT
                         <div class="players">${yardTotal}</div>
-                        <div class="players">${hcpTotal}</div>
+                        <div class="players"></div>
+                        <div class="players">${parTotal}</div>
                     </div>`)
 }
 
@@ -213,10 +217,14 @@ function addPlayers(playerName) {
 }
 
 function removePlayers() {
+  if (numPlayers === 0) {
+    return null
+  }
   numPlayers--;
   players.remove();
   $(".name").children("div:last").remove();
   removeRow();
+
 }
 
 function doMath(el) {
@@ -227,14 +235,13 @@ function doMath(el) {
 
 
   for (let i = 1; i <= numPlayers; i++) {
-    let player = players.playerNames[i-1]
+    let player = players.playerNames[i - 1]
     if (el.id.indexOf(i) === 6) {
       if (!el.id.charAt(8)) {
         player.outNum += num;
         $(`#out${i}`).html(player.outNum);
         // }
-      }
-      else {
+      } else {
         player.inNum += num;
         $(`#in${i}`).html(player.inNum);
       }
@@ -246,18 +253,24 @@ function doMath(el) {
 }
 
 function message() {
-
+  $("#scoreMessage").html(" ")
   players.playerNames.forEach(player => {
-    let score = player.totalNum - parTotal
-    if(score <= 0) {
-      $("#bottomSection").append(`<p>${player.name}'s score: ${score}. On to the PGA!</p>`)
-    }
-    else {
-      $("#bottomSection").append(`<p>${player.name}'s score: ${score}. Better luck next time</p>`)
-    }
-
+    let score = player.totalNum - parTotal;
     console.log(player)
+    if (player === []) {
+      $("#scoreMessage").append(`<p>No players</p>`)
+    }
+    if (score <= 0) {
+      $("#scoreMessage").append(`<p>${player.name}'s score: ${score}. On to the PGA!</p>`)
+    } else {
+      $("#scoreMessage").append(`<p>${player.name}'s score: ${score}. Better luck next time</p>`)
+    }
 
   })
+}
 
+function newGame() {
+  $("#finishModal").modal('hide');
+  players = new PlayerCollection()
+  getCourses()
 }
