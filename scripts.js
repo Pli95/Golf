@@ -114,7 +114,7 @@ function printCard(i) {
   }
   $(".golfCard").append(`<h3>${name}</h3>
                          <div class="buttons">
-                            <button class="btn btn-primary" onclick="getCourses()">Back</button>
+                            <button class="btn btn-primary" onclick="newGame()">Back</button>
                             <div class="playersButtons">
                                 <span>Players</span>
                                 <button class="btn addRemove" data-toggle="modal" data-target="#addPlayerModal"><i class="fas fa-plus-circle"></i></button>
@@ -123,7 +123,7 @@ function printCard(i) {
                          </div>
                          <div class="box"></div>
                          <div class="buttons" id="bottomSection">
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#finishModal" onclick="message()">Finished Game</button>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#finishModal" onclick="message()" id="finishButton">Finished Game</button>
                          </div>`);
   $(".box").append(`<div class="label column">
                         <div class="name">HOLE
@@ -261,7 +261,10 @@ function message() {
       $("#scoreMessage").append(`<p>No players</p>`)
     }
     if (score <= 0) {
-      $("#scoreMessage").append(`<p>${player.name}'s score: ${score}. On to the PGA!</p>`)
+      $("#scoreMessage").append(`<p id="newGame">${player.name}'s score: ${score}. On to the PGA!</p>`)
+      setTimeout(function () {
+        confetti(document.querySelector("#newGame"))
+      }, 500)
     } else {
       $("#scoreMessage").append(`<p>${player.name}'s score: ${score}. Better luck next time</p>`)
     }
@@ -270,7 +273,12 @@ function message() {
 }
 
 function newGame() {
-  $("#finishModal").modal('hide');
-  players = new PlayerCollection()
-  getCourses()
+  let result = confirm("Are you sure? All games will be reset");
+  if (result === true) {
+    $("#finishModal").modal('hide');
+    players = new PlayerCollection();
+    numPlayers = 0;
+    getCourses()
+  }
+
 }
