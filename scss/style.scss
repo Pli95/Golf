@@ -39,6 +39,7 @@ body {
   }
 
   .golfCard {
+    position: absolute;
     margin: $globalMargin;
     padding: $globalMargin;
     border-radius: 10px;
@@ -106,6 +107,13 @@ body {
         height: 300px;
       }
     }
+
+    .golfCard {
+      position: relative;
+    }
   }
+
+
 }
+
 

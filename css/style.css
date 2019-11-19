@@ -17,6 +17,7 @@ body {
         body .courses .card .card-body .teeType button:hover {
           opacity: .5; }
   body .golfCard {
+    position: absolute;
     margin: 20px;
     padding: 20px;
     border-radius: 10px;
@@ -61,4 +62,6 @@ body {
     align-items: center;
     min-height: 800px; }
     body .courses img {
-      height: 300px; } }
+      height: 300px; }
+  body .golfCard {
+    position: relative; } }
